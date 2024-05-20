@@ -10,32 +10,35 @@ router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
   // Find user by email
-  const user = Login.findOne({email:email});
-  console.log(user)
+  Login.findOne({email:email}).then((user)=>{
   if (!user) {
     return res.status(400).json({ message: 'Invalid email or password' });
   }
 
   // Check password
-  const isMatch = bcrypt.compareSync(password, user.password);
+  //const isMatch = bcrypt.compareSync(password, user.password);
+  const isMatch = jwt.verify( user.password ,'anugrahs');
+  //req.user=isMatch
+  console.log(isMatch)
   if (!isMatch) {
     return res.status(400).json({ message: 'Invalid email or password' });
   }
 
   // Generate JWT
-  const token = jwt.sign(
-    { id: user.id, userType: user.userType },
-    'anugrahs', // Replace with your secret key
-    { expiresIn: '1h' }
-  );
+  // const token = jwt.sign(
+  //   { email: user.email, password:user.password },
+  //   'anugrahs', // Replace with your secret key
+  //   { expiresIn: '1h' }
+  // );
 
-  res.json({ token, userType: user.userType });
+  res.json({ isMatch });
+  })
 });
 router.post('/credentials',async(req,res)=>{
     const {email,password}=req.body;
     // Generate JWT
     const token = jwt.sign(
-    {password:password},
+    { email: email , password:password},
     'anugrahs', // Replace with your secret key
     { expiresIn: '1h' }
     );
