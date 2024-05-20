@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-const StudentForm = () => {
+const StudentForm = ({ user }) => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
+    reset
   } = useForm();
+
+  const [studentDetails, setStudentDetails] = useState({
+    email: '',
+    name: '',
+    studentId: '',
+    stream: '',
+    photo: ''
+  });
+
   const watchPlacementRegistered = watch("placementRegistered", false);
   const watchReceivedOffer = watch("receivedOffer", false);
 
@@ -22,20 +32,33 @@ const StudentForm = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      const response = await axios.get(`/api/getData/${user.email}`);
+      setStudentDetails(response.data);
+      reset(response.data);  // Populate the form with fetched data
+    };
+
+    if (user) {
+      fetchStudentDetails();
+    }
+  }, [user, reset]);
+
   return (
-    <div className="flex flex-col gap-2 mt-4 justify-center items-center  w-screen">
+    <div className="flex flex-col gap-2 mt-4 justify-center items-center w-screen">
       <h3 className="text-lg font-bold text-primary tracking-wide leading-relaxed">
         Student Details
       </h3>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4  p-4 text-sm xs:w-full w-[80%]"
+        className="flex flex-col gap-4 p-4 text-sm xs:w-full w-[80%]"
       >
         <div className="flex flex-col gap-2">
           <label className="font-semibold">Email</label>
           <input
             className="p-2 input input-sm input-primary rounded"
             {...register("email", { required: true })}
+            readOnly
           />
           {errors.email && (
             <span className="text-red-500">This field is required</span>
@@ -118,7 +141,7 @@ const StudentForm = () => {
         <div className="flex flex-col gap-2">
           <label className="font-semibold">Choose your area of interest</label>
           <select
-            className="p-2 text-sm input  input-primary rounded"
+            className="p-2 text-sm input input-primary rounded"
             {...register("interestArea", { required: true })}
           >
             <option value="Data analytics">Data analytics</option>

@@ -19,7 +19,6 @@ router.post('/login', (req, res) => {
   //const isMatch = bcrypt.compareSync(password, user.password);
   const isMatch = jwt.verify( user.password ,'anugrahs');
   //req.user=isMatch
-  console.log(isMatch)
   if (!isMatch) {
     return res.status(400).json({ message: 'Invalid email or password' });
   }
@@ -31,7 +30,7 @@ router.post('/login', (req, res) => {
   //   { expiresIn: '1h' }
   // );
 
-  res.json({ isMatch });
+  res.json({ user:isMatch.email });
   })
 });
 router.post('/credentials',async(req,res)=>{
@@ -40,7 +39,7 @@ router.post('/credentials',async(req,res)=>{
     const token = jwt.sign(
     { email: email , password:password},
     'anugrahs', // Replace with your secret key
-    { expiresIn: '1h' }
+    { expiresIn: '10h' }
     );
     const data=new Login({"email":email,"password":token});
     await data.save()

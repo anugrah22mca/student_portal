@@ -15,7 +15,9 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const user = await login(data.email, data.password);
-      navigate(user.userType === "Student" ? "/student-form" : "/dashboard");
+      //navigate(user.userType === "Student" ? "/student-form" : "/dashboard");
+      navigate(user.user.endsWith("@rit.ac.in") ? "/dashboard" :"/student-form"  );
+
     } catch (err) {
       setError("Invalid credentials");
     }
@@ -31,7 +33,7 @@ const Login = () => {
               name="my_tabs_2"
               role="tab"
               className="tab text-primary font-bold hover:text-accent"
-              aria-label="Student"
+              aria-label="Student/Officer"
               checked
             />
             <div
@@ -44,7 +46,7 @@ const Login = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex justify-start items-center flex-col  gap-4"
               >
-                <h2>Student Login</h2>
+                <h2> Login</h2>
                 <div className="flex gap-x-4 justify-between items-center mt-4 w-full ">
                   <label className="text-sm">Email</label>
                   <input
@@ -70,7 +72,7 @@ const Login = () => {
               </motion.form>
             </div>
 
-            <input
+            {/* <input
               type="radio"
               name="my_tabs_2"
               role="tab"
@@ -111,7 +113,7 @@ const Login = () => {
                 </button>
                 {error && <span className="error">{error}</span>}
               </motion.form>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
