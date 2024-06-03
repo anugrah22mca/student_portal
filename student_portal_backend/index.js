@@ -9,7 +9,9 @@ const mongoURL =
   "mongodb+srv://portal:student@clusterlibrary.5fslb.mongodb.net/studentPortal?retryWrites=true&w=majority&appName=ClusterLibrary";
 const Login = require("./config/Login");
 
-app.use(cors());
+app.use(cors({
+  origin:'*',
+}));
 app.use(bodyParser.json());
 
 mongoose.connect(mongoURL, {
