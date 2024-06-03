@@ -1,7 +1,7 @@
 // src/services/authService.js
 import axios from "axios";
 
-export const API_URL = "http://localhost:5000/api";
+export const API_URL = "https://student-portal-yzfw.vercel.app/api";
 
 export const register = async (email, password, userType) => {
   return axios.post(`${API_URL}/register`, { email, password, userType });
