@@ -15,36 +15,38 @@ router.post("/login", (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // Check password
-    //const isMatch = bcrypt.compareSync(password, user.password);
-    const isMatch = jwt.verify(user.password, "anugrahs");
-    //req.user=isMatch
-    if (!isMatch) {
+    // Verify password using JWT
+    try {
+      jwt.verify(user.password, password);
+      res.json({ user: user.email, userType: user.userType, stream: user.stream });
+    } catch (error) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-
-    // Generate JWT
-    // const token = jwt.sign(
-    //   { email: user.email, password:user.password },
-    //   'anugrahs', // Replace with your secret key
-    //   { expiresIn: '1h' }
-    // );
-
-    res.json({ user: isMatch.email });
   });
 });
+
 router.post("/credentials", async (req, res) => {
-  const { email, password } = req.body;
-  // Generate JWT
+  const { email, password, userName, stream, url, Id, userType } = req.body;
+
+  // Generate JWT token using password as payload
   const token = jwt.sign(
-    { email: email, password: password },
-    "anugrahs", // Replace with your secret key
-    {
-      expiresIn: '7d'
-    }
+    { email: email },
+    password,
+    { expiresIn: '7d' }
   );
-  const data = new Login({ email: email, password: token });
+
+  const data = new Login({
+    email: email,
+    password: token,
+    stream: stream,
+    Id: Id,
+    userName: userName,
+    url: url,
+    userType: userType
+  });
+
   await data.save();
   res.json(req.body);
 });
+
 module.exports = router;

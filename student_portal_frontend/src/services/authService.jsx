@@ -12,9 +12,10 @@ export const login = async (email, password) => {
     email,
     password,
   });
-  console.log(response);
   if (response.data.user) {
     localStorage.setItem("user", JSON.stringify(response.data.user));
+    localStorage.setItem("userType", JSON.stringify(response.data.userType));
+    localStorage.setItem("stream", JSON.stringify(response.data.stream));
   }
   return response.data;
 };

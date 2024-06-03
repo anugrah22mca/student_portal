@@ -27,7 +27,6 @@ app.use("/api/auth", loginRoutes);
 app.get("/api/getData/:email", (req, res) => {
   const email = req.params.email;
   Login.findOne({ email: email }).then((student) => {
-    console.log(student);
     if (student) {
       res.json(student);
     } else {

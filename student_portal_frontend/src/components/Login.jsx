@@ -18,7 +18,6 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const user = await login(data.email, data.password);
-      console.log(user);
       if (user) {
         //expects email here
         setUser({
@@ -27,7 +26,7 @@ const Login = () => {
       }
       //navigate(user.userType === "Student" ? "/student-form" : "/dashboard");
       navigate(
-        user.user.endsWith("@rit.ac.in") ? "/dashboard" : "/student-form"
+        user.userType === 'Officer' ? "/dashboard" : "/student-form"
       );
     } catch (err) {
       setError("Invalid credentials");

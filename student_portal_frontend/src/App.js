@@ -6,6 +6,7 @@ import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./components/Login";
 import { UserProvider } from "./contexts/userContext";
+import Success from "./components/Success";
 
 const App = () => (
   <UserProvider>
@@ -15,6 +16,7 @@ const App = () => (
         <Route path="/student-form" element={<StudentForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" exact element={<Login />} />
+        <Route path="/success" element={<Success />} />
       </Routes>
     </Router>
   </UserProvider>

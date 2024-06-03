@@ -4,11 +4,13 @@ import axios from "axios";
 import { UserContext } from "../contexts/userContext";
 import { API_URL } from "../services/authService";
 import Login from "./Login";
+import { useNavigate } from "react-router-dom";
 
 const StudentForm = () => {
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  const {
+  const {   
     register,
     handleSubmit,
     watch,
@@ -18,44 +20,44 @@ const StudentForm = () => {
 
   const [studentDetails, setStudentDetails] = useState({
     email: "",
-    name: "",
-    studentId: "",
+    userName: "",
+    Id: "",
     stream: "",
-    photo: "",
+    url: "",
   });
 
   const watchPlacementRegistered = watch("placementRegistered", false);
   const watchReceivedOffer = watch("receivedOffer", false);
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const response = await axios.post(API_URL + "/students/submit", data);
-      console.log(response.data);
+      navigate("/success");
     } catch (error) {
       console.error("Error submitting form", error);
     }
   };
 
   useEffect(() => {
+    console.log("contextUser",user)
     const fetchStudentDetails = async () => {
       if (!user?.email) return;
       try {
         const response = await axios.get(`${API_URL}/getData/${user.email}`);
-        console.log(response, "resp");
+        console.log("userDetails", response)
         setStudentDetails(response.data);
         reset(response.data); // Populate the form with fetched data
       } catch (error) {
-        console.log(error);
+        console.log("submit error",error);
       }
     };
 
     fetchStudentDetails();
   }, [user, reset]);
 
-  if (!user) {
-    return <div>session broke</div>;
-  }
+  // if (!user) {
+  //   return <div>session broke</div>;
+  // }
 
   return (
     <div className="flex flex-col gap-2 mt-4 justify-center items-center w-screen">
@@ -82,7 +84,8 @@ const StudentForm = () => {
           <label className="font-semibold">Name of Student</label>
           <input
             className="p-2 input input-sm input-primary rounded"
-            {...register("name", { required: true })}
+            {...register("userName", { required: true })}
+            readOnly
           />
           {errors.name && (
             <span className="text-red-500">This field is required</span>
@@ -93,7 +96,8 @@ const StudentForm = () => {
           <label className="font-semibold">Student ID</label>
           <input
             className="p-2 input input-sm input-primary rounded"
-            {...register("studentId", { required: true })}
+            {...register("Id", { required: true })}
+            readOnly
           />
           {errors.studentId && (
             <span className="text-red-500">This field is required</span>
@@ -115,7 +119,7 @@ const StudentForm = () => {
           <label className="font-semibold">Photo URL</label>
           <input
             className="p-2 input input-sm input-primary rounded"
-            {...register("photo", { required: true })}
+            {...register("url", { required: true })}
           />
           {errors.photo && (
             <span className="text-red-500">This field is required</span>
