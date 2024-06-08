@@ -1,4 +1,3 @@
-// src/services/authService.js
 import axios from "axios";
 
 export const API_URL = "https://student-portal-yzfw.vercel.app/api";

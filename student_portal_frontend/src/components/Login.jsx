@@ -1,4 +1,3 @@
-// src/components/Login.js
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { login } from "../services/authService";
@@ -19,7 +18,6 @@ const Login = () => {
     try {
       const user = await login(data.email, data.password);
       if (user) {
-        //expects email here
         setUser({
           email: user.user,
         });

@@ -3,14 +3,13 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { UserContext } from "../contexts/userContext";
 import { API_URL } from "../services/authService";
-import Login from "./Login";
 import { useNavigate } from "react-router-dom";
 
 const StudentForm = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const {   
+  const {
     register,
     handleSubmit,
     watch,
@@ -38,26 +37,36 @@ const StudentForm = () => {
     }
   };
 
+  const fetchStudentDetails = async () => {
+    if (!user?.email) return;
+    try {
+      const response = await axios.get(`${API_URL}/getData/${user.email}`);
+      setStudentDetails(response.data);
+      reset(response.data); // Populate the form with fetched data
+    } catch (error) {
+      console.log("submit error", error);
+    }
+  };
+
+  const refreshForm = () => {
+    reset({
+      email: studentDetails.email,
+      userName: studentDetails.userName,
+      Id: studentDetails.Id,
+      stream: studentDetails.stream,
+      url: studentDetails.url,
+      placementRegistered: false,
+      placementId: "",
+      attendedInterviews: false,
+      interestArea: [],
+      receivedOffer: false,
+      offerDocument: null,
+    });
+  };
+
   useEffect(() => {
-    console.log("contextUser",user)
-    const fetchStudentDetails = async () => {
-      if (!user?.email) return;
-      try {
-        const response = await axios.get(`${API_URL}/getData/${user.email}`);
-        console.log("userDetails", response)
-        setStudentDetails(response.data);
-        reset(response.data); // Populate the form with fetched data
-      } catch (error) {
-        console.log("submit error",error);
-      }
-    };
-
     fetchStudentDetails();
-  }, [user, reset]);
-
-  // if (!user) {
-  //   return <div>session broke</div>;
-  // }
+  }, [user]);
 
   return (
     <div className="flex flex-col gap-2 mt-4 justify-center items-center w-screen">
@@ -87,7 +96,7 @@ const StudentForm = () => {
             {...register("userName", { required: true })}
             readOnly
           />
-          {errors.name && (
+          {errors.userName && (
             <span className="text-red-500">This field is required</span>
           )}
         </div>
@@ -99,7 +108,7 @@ const StudentForm = () => {
             {...register("Id", { required: true })}
             readOnly
           />
-          {errors.studentId && (
+          {errors.Id && (
             <span className="text-red-500">This field is required</span>
           )}
         </div>
@@ -121,7 +130,7 @@ const StudentForm = () => {
             className="p-2 input input-sm input-primary rounded"
             {...register("url", { required: true })}
           />
-          {errors.photo && (
+          {errors.url && (
             <span className="text-red-500">This field is required</span>
           )}
         </div>
@@ -157,16 +166,48 @@ const StudentForm = () => {
 
         <div className="flex flex-col gap-2">
           <label className="font-semibold">Choose your area of interest</label>
-          <select
-            className="p-2 text-sm input input-primary rounded"
-            {...register("interestArea", { required: true })}
-          >
-            <option value="Data analytics">Data analytics</option>
-            <option value="Data Annotation">Data Annotation</option>
-            <option value="User Experience">User Experience</option>
-            <option value="Cybersecurity">Cybersecurity</option>
-            <option value="Research">Research</option>
-          </select>
+          <div className="flex flex-col">
+            <label>
+              <input
+                type="checkbox"
+                value="Data analytics"
+                {...register("interestArea", { required: true })}
+              />
+              Data analytics
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="Data Annotation"
+                {...register("interestArea", { required: true })}
+              />
+              Data Annotation
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="User Experience"
+                {...register("interestArea", { required: true })}
+              />
+              User Experience
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="Cybersecurity"
+                {...register("interestArea", { required: true })}
+              />
+              Cybersecurity
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="Research"
+                {...register("interestArea", { required: true })}
+              />
+              Research
+            </label>
+          </div>
           {errors.interestArea && (
             <span className="text-red-500">This field is required</span>
           )}
@@ -200,7 +241,7 @@ const StudentForm = () => {
           <button
             type="button"
             className="p-2 bg-gray-300 text-black rounded"
-            onClick={() => window.location.reload()}
+            onClick={refreshForm}
           >
             Refresh
           </button>

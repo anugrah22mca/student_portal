@@ -1,4 +1,3 @@
-// src/App.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import StudentForm from "./components/StudentForm";
@@ -13,10 +12,12 @@ const App = () => (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/student-form" element={<StudentForm />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/student-form" element={<StudentForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/success" element={<Success />} />
+        </Route>
         <Route path="/" exact element={<Login />} />
-        <Route path="/success" element={<Success />} />
       </Routes>
     </Router>
   </UserProvider>

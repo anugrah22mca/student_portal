@@ -172,6 +172,7 @@ const Dashboard = () => {
                 <th>Student ID</th>
                 <th>Stream</th>
                 <th>Registered</th>
+                <th>Area of Interest</th>
               </tr>
             </thead>
             <tbody>
@@ -182,6 +183,9 @@ const Dashboard = () => {
                   <td>{student.Id}</td>
                   <td>{student.stream}</td>
                   <td>{student.placementRegistered ? "Yes" : "No"}</td>
+                  {student.interestArea.map((item)=>(
+                    <td>{item}</td>
+                  ))}
                 </tr>
               ))}
             </tbody>

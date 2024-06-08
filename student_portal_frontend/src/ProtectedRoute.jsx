@@ -1,25 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import About from './components/About';
-import Login from './components/Login';
-import ProtectedRoute from './ProtectedRoute'; // Import your ProtectedRoute component
+import { Outlet, Navigate } from 'react-router-dom';
+import { UserContext } from './contexts/userContext';
+import { useContext } from 'react';
 
-function App() {
-  const isAuthenticated = true; // Replace with actual authentication logic
 
-  return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          {/* other protected routes */}
-        </Route>
-      </Routes>
-    </Router>
-  );
+const ProtectedRoute = () =>{
+  const { user, setUser } = useContext(UserContext);
+
+
+  //const user=null;
+  return user ?  <Outlet/> : <Navigate to="/login" replace />;
 }
-
-export default App;
+export default ProtectedRoute;
