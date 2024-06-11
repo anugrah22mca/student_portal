@@ -6,8 +6,8 @@ const studentSchema = new mongoose.Schema({
   Id: String,
   stream: String,
   url: String,
-  userType:String,
-  password:String,
+  userType: String,
+  password: String,
   placementRegistered: Boolean,
   placementId: String,
   attendedInterviews: Boolean,
@@ -17,4 +17,4 @@ const studentSchema = new mongoose.Schema({
 });
 
 const Student = mongoose.model('Student', studentSchema);
-module.exports=Student;
+module.exports = Student;
